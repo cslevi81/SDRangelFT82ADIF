@@ -40,15 +40,16 @@ class LogReader:
             with open(filename, "r", encoding="utf-8") as input_file:
                 for line in input_file:
                     cols = line.strip("\n").split()
-                    qso_datetime = cols[0].split("_")
-                    cls.__records.append({
-                        "QSO_DATE": "20" + qso_datetime[0],
-                        "TIME_ON": qso_datetime[1][0:4],
-                        "CALL": cols[8],
-                        "MODE": cols[3],
-                        "FREQ": cols[1],
-                        "RST_SENT": cols[4]
-                    })
+                    if len(cols) > 8:
+                        qso_datetime = cols[0].split("_")
+                        cls.__records.append({
+                            "QSO_DATE": "20" + qso_datetime[0],
+                            "TIME_ON": qso_datetime[1][0:4],
+                            "CALL": cols[8],
+                            "MODE": cols[3],
+                            "FREQ": cols[1],
+                            "RST_SENT": cols[4]
+                        })
         except FileNotFoundError:
             sys.exit("Input file not found")
 
