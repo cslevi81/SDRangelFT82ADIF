@@ -50,6 +50,11 @@ class LogReader:
                             "FREQ": cols[1],
                             "RST_SENT": cols[4]
                         })
+                print(
+                    "... log size: " +
+                    str(len(cls.__records)) +
+                    " records."
+                )
         except FileNotFoundError:
             sys.exit("Input file not found")
 
@@ -67,17 +72,35 @@ class LogReader:
                 [new_element for new_element in out if new_element["CALL"] == old_element["CALL"]]
             ) == 0:
                 out.append(old_element)
+        print(
+            "Remove duplicates: " +
+            str(len(cls.__records)) + " --> " + str(len(out)) +
+            " records."
+        )
         cls.__records = out
 
     @classmethod
     def remove_long_callsign(cls):
         """ Remove duplicated calls """
-        cls.__records = [element for element in cls.__records if len(element["CALL"]) <= 13]
+        out = [element for element in cls.__records if len(element["CALL"]) <= 13]
+        print(
+            "Remove long callsigns: " +
+            str(len(cls.__records)) + " --> " + str(len(out)) +
+            " records."
+        )
+        cls.__records = out
+
 
     @classmethod
     def remove_non_eqsl_ag_callsign(cls, eqsl_ag_db):
         """ Remove non eQSL AG-members' calls """
-        cls.__records = [element for element in cls.__records if element["CALL"] in eqsl_ag_db]
+        out = [element for element in cls.__records if element["CALL"] in eqsl_ag_db]
+        print(
+            "Remove non-eQSL AG callsigns: " +
+            str(len(cls.__records)) + " --> " + str(len(out)) +
+            " records."
+        )
+        cls.__records = out
 
 class LogWriter:
     """ eQSL.cc-compatible ADIF 3.1.3 format log class """
