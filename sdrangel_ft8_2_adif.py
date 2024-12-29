@@ -48,7 +48,10 @@ class LogReader:
                             "CALL": cols[8],
                             "MODE": cols[3],
                             "FREQ": cols[1],
-                            "RST_SENT": cols[4]
+                            "RST_SENT": cols[4],
+                            "QSLMSG": qso_datetime[1][0:6] + " UTC, " +
+                            cols[6] + " Hz shift, " +
+                            "msg:\"" + ' '.join(cols[7:]) + "\""
                         })
                 print(
                     "... log size: " +
