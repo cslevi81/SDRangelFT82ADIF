@@ -1,5 +1,6 @@
 """ Convert SDRangel's FT8 log to eQSL.cc-compatible ADIF 3.1.3 format log """
 from datetime import datetime, timezone
+import re
 import sys
 import requests
 
@@ -93,6 +94,19 @@ class LogReader:
         )
         cls.__records = out
 
+    @classmethod
+    def remove_cq_calls(cls):
+        """ Remove duplicated calls """
+        out = [element for element in cls.__records if not re.search(
+            "msg:\"CQ ",
+            element["QSLMSG"]
+        )]
+        print(
+            "Remove CQ calls: " +
+            str(len(cls.__records)) + " --> " + str(len(out)) +
+            " records."
+        )
+        cls.__records = out
 
     @classmethod
     def remove_non_eqsl_ag_callsign(cls, eqsl_ag_db):
@@ -156,6 +170,7 @@ if len(sys.argv) != 3:
     sys.exit()
 
 LogReader.set(sys.argv[1])
+LogReader.remove_cq_calls()
 LogReader.remove_duplicated_calls()
 LogReader.remove_long_callsign()
 EQSLAGMembers.set()
